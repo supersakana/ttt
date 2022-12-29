@@ -26,26 +26,24 @@ const board = (() => {
     // creates and appends board cells
     const create = () => {
         for(i = 0; i < 9; i++){
-            let cell = cellFactory();
+            let cell = cellFactory(i);
             cells.push(i);
-            board.append(cell.element(i));
+            cell.addEventListener('click', () => { console.log(cell.id) })
         }
     }
-    return { create };
+    return { create, cells };
 })();
 
 // factory function
-const cellFactory = () => {
-    // returns cell element to be appended
-    const element = (n) => {
-        let newCell = document.createElement('div')
-        newCell.classList.add('w-20', 'h-20', 'bg-white', 'rounded-md', 'shadow-md', 'hover:cursor-pointer')
-        newCell.id = `cell-${n}`
-        newCell.dataset.mark = ''
+const cellFactory = (n) => {
+    // returns and append new cell
+    let cell = document.createElement('div')
+    cell.classList.add('w-20', 'h-20', 'bg-white', 'rounded-md', 'shadow-md', 'hover:cursor-pointer')
+    cell.id = `cell-${n}`
+    cell.dataset.mark = ''
+    document.getElementById('board').append(cell)
 
-        return  newCell
-    }
-    return { element };
+    return  cell
 };
 
 // factory function
