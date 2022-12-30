@@ -11,13 +11,12 @@ const game = (() => {
     // creates 2 players
     const twoPlayers = () => {
         let p1 = playerFactory('X')
-        players.push(p1)
         let p2 = playerFactory('O')
-        players.push(p2)
+        players.push(p1, p2)
     }
 
     // swaps player and returns current player's symbol
-    const makeMark = () => {
+    const currentPlayer = () => {
         swap()
         return players[1].sym
     }
@@ -27,12 +26,13 @@ const game = (() => {
         [players[0], players[1]] = [players[1], players[0]]
     }
 
+    // ends the game if tie or winner
     const end = () => {
         if(board.winExsists(players[1].sym)){
             console.log('woo')
         }
     }
-    return { start, makeMark, end };
+    return { start, currentPlayer, end };
 })();
 
 // module pattern
@@ -48,14 +48,19 @@ const board = (() => {
             let cell = cellFactory(i);
             cells.push(i);
             cell.addEventListener('click', () => { 
-                if(cell.dataset.sym == ''){
-                    mark = game.makeMark()
-                    cell.dataset.sym = mark
-                    cell.append(mark)
-                    cells[parseInt(cell.dataset.no)] = mark
-                    game.end()
-                }
+                markBoard(cell)
             })
+        }
+    }
+
+    // returns true if there is a winning combo on the board
+    const markBoard = (cell) => {
+        if(cell.dataset.sym == ''){
+            mark = game.currentPlayer()
+            cell.dataset.sym = mark
+            cell.append(mark)
+            cells[parseInt(cell.dataset.no)] = mark
+            game.end()
         }
     }
 
@@ -78,8 +83,7 @@ const cellFactory = (n) => {
 };
 
 // factory function
-const playerFactory = (s) => {
-    let sym = s
+const playerFactory = (sym) => {
     return { sym };
 };
 
