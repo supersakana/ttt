@@ -1,4 +1,3 @@
-// module pattern
 const Game = (() => {   
     const players = []
 
@@ -25,6 +24,8 @@ const Game = (() => {
     const end = (player) => {
         if(Board.winExsists(player.sym)){
             Display.winner(player)
+        } else if (Board.tieExsists()){
+            Display.tie()
         }
     }
     return { start, currentPlayer, end };
@@ -35,7 +36,12 @@ const Display = (() => {
         let element = document.querySelector('.winner')
         element.innerHTML = `${player.name} is the winner!`
     }
-    return { winner }
+
+    const tie = () => {
+        let element = document.querySelector('.winner')
+        element.innerHTML = "It's a tie!"
+    }
+    return { winner, tie }
 })();
 
 const Board = (() => {
@@ -67,7 +73,11 @@ const Board = (() => {
     const winExsists = (sym) => {
         return wins.some(combo => combo.every(cell => cells[cell] == sym))
     }
-    return { cells, create, winExsists };
+
+    const tieExsists = () => {
+        return cells.every(cell => cell == 'X' || cell == 'O')
+    }
+    return { cells, create, winExsists, tieExsists };
 })();
 
 const cellFactory = (n) => {
@@ -83,7 +93,5 @@ const playerFactory = (sym, no) => {
     let name = `Player ${no}`
     return { sym, name };
 };
-
-
 
 Game.start()
