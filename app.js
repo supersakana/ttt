@@ -7,8 +7,9 @@ const Game = (() => {
     }
 
     const twoPlayers = () => {
-        let p1 = playerFactory('X', 1)
-        let p2 = playerFactory('O', 2)
+        let p1 = new Player('X', 1)
+        let p2 = new Player('O', 2)
+        console.log(p1.name)
         players.push(p1, p2)
     }
 
@@ -52,7 +53,7 @@ const Board = (() => {
     
     const create = () => {
         for(i = 0; i < 9; i++){
-            let cell = cellFactory(i);
+            let cell = new Cell(i);
             cells.push(i);
             cell.addEventListener('click', () => { 
                 markBoard(cell)
@@ -80,18 +81,22 @@ const Board = (() => {
     return { cells, create, winExsists, tieExsists };
 })();
 
-const cellFactory = (n) => {
-    let cell = document.createElement('div')
-    cell.classList.add('w-20', 'h-20', 'bg-white', 'rounded-md', 'shadow-md', 'hover:cursor-pointer', 'flex', 'justify-center', 'items-center')
-    cell.dataset.sym = ''
-    cell.dataset.no = n
-    document.getElementById('board').append(cell)
-    return cell
+class Cell {
+    constructor(n){
+        let cell = document.createElement('div')
+        cell.classList.add('w-20', 'h-20', 'bg-white', 'rounded-md', 'shadow-md', 'hover:cursor-pointer', 'flex', 'justify-center', 'items-center')
+        cell.dataset.sym = ''
+        cell.dataset.no = n
+        document.getElementById('board').append(cell)
+        return cell
+    }
 };
 
-const playerFactory = (sym, no) => {
-    let name = `Player ${no}`
-    return { sym, name };
+class Player {
+    constructor(sym, no){
+        this.name = `Player ${no}`
+        this.sym = sym
+    }
 };
 
 Game.start()
